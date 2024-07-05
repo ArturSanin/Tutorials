@@ -1,0 +1,16 @@
+
+SELECT *
+FROM Table_Name
+
+
+SELECT Col_Name_1
+FROM Table_Name
+
+
+SELECT Col_Name_n
+FROM Table_Name
+
+
+SELECT Col_Name_1, Col_Name_2, … , Col_Name_n
+FROM Table_Name
+
