@@ -7,71 +7,97 @@ import pandas as pd
 # Saving the file path to the dataset.
 path = "Customer Purchasing Behaviors.csv"
 
-# Loading the data into a dataframe.
+# Loading the data into a DataFrame.
 df = pd.read_csv(path)
 
-# Displaying 5 rows of the data.
+# Displaying the first 5 rows of the data.
 print(df.head())
 
 # Displaying the last 5 rows of the data.
 print(df.tail())
 
+# Displaying the first and the last 5 rows of the DataFrame.
+print(df)
+
+
 """
-    Pandas DataFrame attributes.
+    DataFrame attributes.
 """
 
-# Shape of the dataset.
+"Shape of the dataset."
 df_shape = df.shape
+print(df_shape)
+
+# Row count.
 df_row_count = df_shape[0]
-df_column_count = df_shape[1]
 print(df_row_count)
+
+# Column count.
+df_column_count = df_shape[1]
 print(df_column_count)
 
-# DataFrame columns attribute.
-print(df.columns)  # Displaying the column names of the data.
 
-# DataFrame size attribute.
-print(df.size)  # Displaying the size of the DataFrame
+"Dataset column names."
+df_columns = df.columns
+print(df_columns)
 
-# Displaying the dtypes of each column.
-print(df.dtypes)
+# Saving the column names as a list.
+df_columns_list = list(df.columns)
+print(df_columns_list)
 
-# DataFrame empty attribute. Returns True if the DataFrame is empty, else False.
+# Saving the column names as a set.
+df_columns_set = set(df.columns)
+print(df_columns_set)
+
+
+"Size of the DataFrame. Size is the product of row count and column count."
+df_size = df.size
+print(df_size)
+
+
+"Data type for each column, saved as a pandas.Series."
+df_dtypes = df.dtypes
+print(df_dtypes)
+
+# Data types in a list. Every element is a numpy.dtype object.
+df_dtypes_list = list(df_dtypes)
+print(df_dtypes_list)
+
+
+"Returns True if the DataFrame is empty, else False."
 print(df.empty)
 
-# DataFrame values attribute.
-print(df.values)
 
-# DataFrame T attribute.
-print(df.T)
+"""
+    Selecting subsets of a DataFrame
+"""
 
-# DataFrame index attribute.
-print(df.index)
+"Selecting a single column"
 
-# DataFrame axes attribute.
-print(df.axes)
-
-# DataFrame ndim attribute.
-print(df.ndim)
-
-
-# Saving every column as a variable.
+# Selecting the column user_id using a one element list.
 user_id = df["user_id"]
-age = df["age"]
-annual_income = df["annual_income"]
-purchase_amount = df["purchase_amount"]
+print(user_id)
+
+# Selecting the column age using the dot operator.
+age = df.age
+print(age)
+
+# Selecting the column annual_income using iloc.
+annual_income = df.iloc[:, 2]
+print(annual_income)
+
+# Selecting the column annual_income using iloc, diffrent notation.
+annual_income_2 = df.iloc[0:df.shape[0], 2]
+print(annual_income_2)
+
+# Selecting the column annual_income using loc.
+purchase_amount = df.loc[:, "purchase_amount"]
+print(purchase_amount)
+
+# Selecting the other columns.
 loyalty_score = df["loyalty_score"]
 region = df["region"]
 purchase_frequency = df["purchase_frequency"]
-
-# Displaying the values of the columns.
-print(user_id)
-print(age)
-print(annual_income)
-print(purchase_amount)
-print(loyalty_score)
-print(region)
-print(purchase_frequency)
 
 """
     The Pandas describe() function.
