@@ -1,0 +1,542 @@
+/* 
+    This text file contains queries against the W3Schools demo database. All queries work in the W3Schools SQL Tryit Editor,
+    which can be found at the following link: https://www.w3schools.com/sql/trysql.asp?filename=trysql_select_like_not 
+*/
+
+
+/* How many products are there in each category? */
+
+SELECT C.CategoryName,
+       COUNT(P.ProductID) AS ProductCount
+FROM Products P
+    LEFT JOIN Categories C
+        ON P.CategoryID = C.CategoryID
+GROUP BY C.CategoryName
+ORDER BY COUNT(C.CategoryID) DESC;
+
+
+/* What is the quantity each employee sold?  */
+
+SELECT E.EmployeeID,
+       SUM(OD.Quantity) AS TotalQuantity
+FROM((OrderDetails OD
+    LEFT JOIN Orders O
+        ON OD.OrderID = O.OrderID)
+    LEFT JOIN Employees E
+        ON O.EmployeeID = E.EmployeeID)
+GROUP BY E.EmployeeID
+ORDER BY SUM(OD.Quantity) DESC;
+
+
+/*  */
+
+SELECT P.ProductName,
+       T.Revenue
+FROM Products P
+    INNER JOIN
+    (
+        SELECT TOP 1
+            P.ProductID,
+            SUM(OD.Quantity * P.Price) AS Revenue
+        FROM OrderDetails OD
+            LEFT JOIN Products P
+                ON OD.ProductID = P.ProductID
+        GROUP BY P.ProductID
+        ORDER BY SUM(OD.Quantity * P.Price) DESC
+    ) AS T
+        ON P.ProductID = T.ProductID;
+
+
+/* Which country has the most Customers and which one has the least? */
+
+SELECT Country,
+       CustomersCount
+FROM
+(
+    SELECT Country,
+           COUNT(CustomerID) AS CustomersCount
+    FROM Customers
+    GROUP BY Country
+) 
+WHERE CustomersCount =
+(
+    SELECT MAX(CustomersCount) FROM (
+    SELECT Country,
+           COUNT(CustomerID) AS CustomersCount
+    FROM Customers
+    GROUP BY Country
+)
+)
+      OR CustomersCount =
+      (
+          SELECT MIN(CustomersCount) FROM (
+    SELECT Country,
+           COUNT(CustomerID) AS CustomersCount
+    FROM Customers
+    GROUP BY Country
+)
+      )
+ORDER BY CustomersCount DESC;
+
+
+/* How many orders were shipped by shippers in every country? In which country did every shipper ship the most and least orders? */
+
+SELECT S.ShipperID,
+       C.Country,
+       COUNT(O.OrderID) AS OrderCount
+FROM((Orders O
+    INNER JOIN Customers C
+        ON O.CustomerID = C.CustomerID)
+    INNER JOIN Shippers S
+        ON O.ShipperID = S.ShipperID)
+GROUP BY S.ShipperID,
+         C.Country
+ORDER BY S.ShipperID ASC,
+         COUNT(O.OrderID) DESC;
+
+
+/* Which cities have the same first letter as the country? */
+
+SELECT DISTINCT
+    City,
+    Country
+FROM Customers
+WHERE (
+          City LIKE 'A%'
+          AND Country LIKE 'A%'
+      )
+      OR (
+             City LIKE 'B%'
+             AND Country LIKE 'B%'
+         )
+      OR (
+             City LIKE 'C%'
+             AND Country LIKE 'C%'
+         )
+      OR (
+             City LIKE 'D%'
+             AND Country LIKE 'D%'
+         )
+      OR (
+             City LIKE 'E%'
+             AND Country LIKE 'E%'
+         )
+      OR (
+             City LIKE 'F%'
+             AND Country LIKE 'F%'
+         )
+      OR (
+             City LIKE 'G%'
+             AND Country LIKE 'G%'
+         )
+      OR (
+             City LIKE 'H%'
+             AND Country LIKE 'H%'
+         )
+      OR (
+             City LIKE 'I%'
+             AND Country LIKE 'I%'
+         )
+      OR (
+             City LIKE 'J%'
+             AND Country LIKE 'J%'
+         )
+      OR (
+             City LIKE 'K%'
+             AND Country LIKE 'K%'
+         )
+      OR (
+             City LIKE 'L%'
+             AND Country LIKE 'L%'
+         )
+      OR (
+             City LIKE 'M%'
+             AND Country LIKE 'M%'
+         )
+      OR (
+             City LIKE 'N%'
+             AND Country LIKE 'N%'
+         )
+      OR (
+             City LIKE 'O%'
+             AND Country LIKE 'O%'
+         )
+      OR (
+             City LIKE 'P%'
+             AND Country LIKE 'P%'
+         )
+      OR (
+             City LIKE 'Q%'
+             AND Country LIKE 'Q%'
+         )
+      OR (
+             City LIKE 'R%'
+             AND Country LIKE 'R%'
+         )
+      OR (
+             City LIKE 'S%'
+             AND Country LIKE 'S%'
+         )
+      OR (
+             City LIKE 'T%'
+             AND Country LIKE 'T%'
+         )
+      OR (
+             City LIKE 'U%'
+             AND Country LIKE 'U%'
+         )
+      OR (
+             City LIKE 'V%'
+             AND Country LIKE 'V%'
+         )
+      OR (
+             City LIKE 'W%'
+             AND Country LIKE 'W%'
+         )
+      OR (
+             City LIKE 'X%'
+             AND Country LIKE 'X%'
+         )
+      OR (
+             City LIKE 'Y%'
+             AND Country LIKE 'Y%'
+         )
+      OR (
+             City LIKE 'Z%'
+             AND Country LIKE 'Z%'
+         )
+
+
+/* How many orders were placed for each product in total? */
+
+SELECT P.ProductName,
+       T.ProductID,
+       T.OrderCount
+FROM Products P
+    INNER JOIN
+    (
+        SELECT P.ProductID,
+               COUNT(OD.OrderDetailID) AS OrderCount
+        FROM OrderDetails OD
+            LEFT JOIN Products P
+                ON OD.ProductID = P.ProductID
+        GROUP BY P.ProductID
+    ) T
+        ON P.ProductID = T.ProductID
+ORDER BY T.OrderCount DESC;
+
+
+/* What are the highest ordered products and least ordered products? */
+
+SELECT P.ProductName,
+       T.ProductID,
+       T.OrderCount
+FROM Products P
+    INNER JOIN
+    (
+        SELECT P.ProductID,
+               COUNT(OD.OrderDetailID) AS OrderCount
+        FROM OrderDetails OD
+            LEFT JOIN Products P
+                ON OD.ProductID = P.ProductID
+        GROUP BY P.ProductID
+    ) T
+        ON P.ProductID = T.ProductID
+WHERE T.OrderCount =
+(
+    SELECT MAX(T.OrderCount)
+    FROM Products P
+        INNER JOIN
+        (
+            SELECT P.ProductID,
+                   COUNT(OD.OrderDetailID) AS OrderCount
+            FROM OrderDetails OD
+                LEFT JOIN Products P
+                    ON OD.ProductID = P.ProductID
+            GROUP BY P.ProductID
+        ) T
+            ON P.ProductID = T.ProductID
+)
+      OR T.OrderCount =
+      (
+          SELECT MIN(T.OrderCount)
+          FROM Products P
+              INNER JOIN
+              (
+                  SELECT P.ProductID,
+                         COUNT(OD.OrderDetailID) AS OrderCount
+                  FROM OrderDetails OD
+                      LEFT JOIN Products P
+                          ON OD.ProductID = P.ProductID
+                  GROUP BY P.ProductID
+              ) T
+                  ON P.ProductID = T.ProductID
+      )
+ORDER BY T.OrderCount DESC;
+
+
+/* How much was every product ordered in the year? */
+
+SELECT T.Y,
+       P.ProductName,
+       T.ProductID,
+       T.OrderCount
+FROM Products P
+    INNER JOIN
+    (
+        SELECT YEAR(O.OrderDate) AS Y,
+               OD.ProductID,
+               COUNT(OD.OrderDetailID) AS OrderCount
+        FROM((OrderDetails OD
+            INNER JOIN Orders O
+                ON OD.OrderID = O.OrderID)
+            INNER JOIN Products P
+                ON OD.ProductID = P.ProductID)
+        GROUP BY YEAR(O.OrderDate),
+                 OD.ProductID
+    ) T
+        ON P.ProductID = T.ProductID
+ORDER BY T.Y,
+         T.OrderCount DESC;
+
+
+/* What was the least and highest ordered Product by year? */
+
+SELECT *
+FROM (SELECT T.Y,
+       P.ProductName,
+       T.ProductID,
+       T.OrderCount
+FROM Products P
+    INNER JOIN
+    (
+        SELECT YEAR(O.OrderDate) AS Y,
+               OD.ProductID,
+               COUNT(OD.OrderDetailID) AS OrderCount
+        FROM((OrderDetails OD
+            INNER JOIN Orders O
+                ON OD.OrderID = O.OrderID)
+            INNER JOIN Products P
+                ON OD.ProductID = P.ProductID)
+        GROUP BY YEAR(O.OrderDate),
+                 OD.ProductID
+    ) T
+        ON P.ProductID = T.ProductID) 
+WHERE 
+	Y = '1997' AND OrderCount = (SELECT TOP 1
+	MaxCount
+FROM
+(SELECT
+	T.Y,
+	MAX(T.OrderCount) AS MaxCount
+FROM Products P
+    INNER JOIN
+    (
+        SELECT YEAR(O.OrderDate) AS Y,
+               OD.ProductID,
+               COUNT(OD.OrderDetailID) AS OrderCount
+        FROM((OrderDetails OD
+            INNER JOIN Orders O
+                ON OD.OrderID = O.OrderID)
+            INNER JOIN Products P
+                ON OD.ProductID = P.ProductID)
+        GROUP BY YEAR(O.OrderDate),
+                 OD.ProductID
+    ) T
+        ON P.ProductID = T.ProductID
+GROUP BY T.Y
+ORDER BY T.Y DESC))
+
+UNION
+SELECT *
+FROM (SELECT T.Y,
+       P.ProductName,
+       T.ProductID,
+       T.OrderCount
+FROM Products P
+    INNER JOIN
+    (
+        SELECT YEAR(O.OrderDate) AS Y,
+               OD.ProductID,
+               COUNT(OD.OrderDetailID) AS OrderCount
+        FROM((OrderDetails OD
+            INNER JOIN Orders O
+                ON OD.OrderID = O.OrderID)
+            INNER JOIN Products P
+                ON OD.ProductID = P.ProductID)
+        GROUP BY YEAR(O.OrderDate),
+                 OD.ProductID
+    ) T
+        ON P.ProductID = T.ProductID) 
+WHERE
+Y = '1996' AND OrderCount = (SELECT TOP 1
+	MaxCount
+FROM
+(SELECT
+	T.Y,
+	MAX(T.OrderCount) AS MaxCount
+FROM Products P
+    INNER JOIN
+    (
+        SELECT YEAR(O.OrderDate) AS Y,
+               OD.ProductID,
+               COUNT(OD.OrderDetailID) AS OrderCount
+        FROM((OrderDetails OD
+            INNER JOIN Orders O
+                ON OD.OrderID = O.OrderID)
+            INNER JOIN Products P
+                ON OD.ProductID = P.ProductID)
+        GROUP BY YEAR(O.OrderDate),
+                 OD.ProductID
+    ) T
+        ON P.ProductID = T.ProductID
+GROUP BY T.Y
+ORDER BY T.Y ASC))
+
+UNION
+SELECT *
+FROM (SELECT T.Y,
+       P.ProductName,
+       T.ProductID,
+       T.OrderCount
+FROM Products P
+    INNER JOIN
+    (
+        SELECT YEAR(O.OrderDate) AS Y,
+               OD.ProductID,
+               COUNT(OD.OrderDetailID) AS OrderCount
+        FROM((OrderDetails OD
+            INNER JOIN Orders O
+                ON OD.OrderID = O.OrderID)
+            INNER JOIN Products P
+                ON OD.ProductID = P.ProductID)
+        GROUP BY YEAR(O.OrderDate),
+                 OD.ProductID
+    ) T
+        ON P.ProductID = T.ProductID) 
+WHERE
+	Y = '1997' AND OrderCount = (SELECT TOP 1
+	MinCount
+FROM
+(SELECT
+	T.Y,
+	Min(T.OrderCount) AS MinCount
+FROM Products P
+    INNER JOIN
+    (
+        SELECT YEAR(O.OrderDate) AS Y,
+               OD.ProductID,
+               COUNT(OD.OrderDetailID) AS OrderCount
+        FROM((OrderDetails OD
+            INNER JOIN Orders O
+                ON OD.OrderID = O.OrderID)
+            INNER JOIN Products P
+                ON OD.ProductID = P.ProductID)
+        GROUP BY YEAR(O.OrderDate),
+                 OD.ProductID
+    ) T
+        ON P.ProductID = T.ProductID
+GROUP BY T.Y
+ORDER BY T.Y DESC))
+
+UNION
+SELECT *
+FROM (SELECT T.Y,
+       P.ProductName,
+       T.ProductID,
+       T.OrderCount
+FROM Products P
+    INNER JOIN
+    (
+        SELECT YEAR(O.OrderDate) AS Y,
+               OD.ProductID,
+               COUNT(OD.OrderDetailID) AS OrderCount
+        FROM((OrderDetails OD
+            INNER JOIN Orders O
+                ON OD.OrderID = O.OrderID)
+            INNER JOIN Products P
+                ON OD.ProductID = P.ProductID)
+        GROUP BY YEAR(O.OrderDate),
+                 OD.ProductID
+    ) T
+        ON P.ProductID = T.ProductID) 
+WHERE
+	Y = '1996' AND OrderCount = (SELECT TOP 1
+	MinCount
+FROM
+(SELECT
+	T.Y,
+	Min(T.OrderCount) AS MinCount
+FROM Products P
+    INNER JOIN
+    (
+        SELECT YEAR(O.OrderDate) AS Y,
+               OD.ProductID,
+               COUNT(OD.OrderDetailID) AS OrderCount
+        FROM((OrderDetails OD
+            INNER JOIN Orders O
+                ON OD.OrderID = O.OrderID)
+            INNER JOIN Products P
+                ON OD.ProductID = P.ProductID)
+        GROUP BY YEAR(O.OrderDate),
+                 OD.ProductID
+    ) T
+        ON P.ProductID = T.ProductID
+GROUP BY T.Y
+ORDER BY T.Y ASC))
+
+ORDER BY Y DESC, OrderCount DESC;
+
+
+/* Joining all tables */
+
+SELECT OD.OrderDetailID,
+       OD.OrderID,
+       OD.ProductID,
+       OD.Quantity,
+       P.ProductName,
+       P.SupplierID,
+       P.CategoryID,
+       P.Unit,
+       P.Price,
+       C.CategoryName,
+       C.Description,
+       S.SupplierName,
+       S.ContactName AS SupplierContactName,
+       S.Address AS SupplierAddress,
+       S.City AS SupplierCity,
+       S.PostalCode AS SupplierPostalCode,
+       S.Country AS SupplierCountry,
+       S.Phone AS SupplierPhone,
+       O.CustomerID,
+       O.EmployeeID,
+       O.OrderDate,
+       O.ShipperID,
+       Cu.CustomerName,
+       Cu.ContactName AS CustomerContactName,
+       Cu.Address AS CustomerAddress,
+       Cu.City AS CustomerCity,
+       Cu.PostalCode AS CustomerPostalCode,
+       Cu.Country AS CustomerCountry,
+       E.LastName AS EmployeeLastName,
+       E.FirstName AS EmployeeFirstName,
+       E.BirthDate AS EmployeeBirthDate,
+       E.Photo AS EmployeePhoto,
+       E.Notes AS EmployeeNotes,
+       Sh.ShipperName,
+       Sh.Phone AS ShipperPhone
+FROM(((((((OrderDetails OD
+    INNER JOIN Products P
+        ON OD.ProductID = P.ProductID)
+    LEFT JOIN Categories C
+        ON C.CategoryID = P.CategoryID)
+    LEFT JOIN Suppliers S
+        ON S.SupplierID = P.SupplierID)
+    INNER JOIN Orders O
+        ON OD.OrderID = O.OrderID)
+    LEFT JOIN Customers Cu
+        ON Cu.CustomerID = O.CustomerID)
+    LEFT JOIN Employees E
+        ON E.EmployeeID = O.EmployeeID)
+    LEFT JOIN Shippers Sh
+        ON Sh.ShipperID = O.ShipperID)
