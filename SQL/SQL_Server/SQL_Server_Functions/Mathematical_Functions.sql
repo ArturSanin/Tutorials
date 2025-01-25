@@ -374,6 +374,76 @@ SELECT DEGREES(PI()); -- Pi in combination with degrees function.
 
 
 
+/* POWER */
+
+SELECT POWER(3, 1);
+
+SELECT POWER(3, 1.0);
+
+SELECT POWER(3, 2); -- Returns the square of a number.
+
+SELECT POWER(3, 2.0); -- Returns the square of a number.
+
+SELECT POWER(3, 3); 
+
+SELECT POWER(3, 3.0); 
+
+SELECT POWER(3, 12);
+
+SELECT POWER(3, 0.5); 
+
+SELECT POWER(3.0, 2); 
+
+SELECT POWER(65.198, 2); 
+
+SELECT POWER(-57, 2);
+
+SELECT POWER(-3.0, 2); 
+
+SELECT POWER(NULL, 19);
+
+SELECT POWER(81, NULL);
+
+SELECT POWER(3, 5);
+
+SELECT POWER(-3, 5);
+
+SELECT POWER(-3, 0);
+
+SELECT POWER(43, 0);
+
+SELECT POWER(0, 0);
+
+SELECT POWER(SQRT(2), 2); -- Power is the inverse for the square root.
+
+SELECT 
+	CASE 
+		WHEN POWER(2, 0.5) = SQRT(2) THEN 'True'
+		ELSE 'False'
+	END;
+
+
+
+/* RADIANS */
+
+SELECT RADIANS(NULL); -- Radians of NULL.
+
+SELECT RADIANS(0); -- Radians of zero.
+
+SELECT RADIANS(0.0); -- Not the same as RADIANS(0).
+
+SELECT RADIANS(-0.0);
+
+SELECT RADIANS(360); -- RADIANS of some positive integer number.
+
+SELECT RADIANS(360.0); -- Not the same as RADIANS(360).
+
+SELECT RADIANS(-123); -- RADIANS of some negative integer number.
+
+SELECT RADIANS(-31.44); -- RADIANS of some negative decimal number.
+
+
+
 /* RAND */
 
 SELECT RAND(); -- Returns a pseudo-random number.
